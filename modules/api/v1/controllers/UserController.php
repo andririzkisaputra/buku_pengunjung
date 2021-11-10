@@ -1,19 +1,15 @@
 <?php
-
-namespace app\modules\api\controllers;
+namespace app\modules\api\v1\controllers;
 
 use Yii;
 use \yii\rest\Controller;
-use \app\modules\api\models\FormLogin;
-use \app\modules\api\models\FormRegistrasi;
+use \app\modules\api\v1\models\FormLogin;
+use \app\modules\api\v1\models\FormRegistrasi;
 /**
  *
  */
 class UserController extends Controller
 {
-  // public function actionIndex() {
-  //   return $this->renderContent('Hello');
-  // }
 
   public function actionLogin() {
     $model = new FormLogin();
@@ -21,7 +17,7 @@ class UserController extends Controller
         return $model->getUser();
     }
 
-    Yii::$app->response->statusCode = 442;
+    Yii::$app->response->statusCode = 404;
     return [
       'errors' => $model->errors
     ];
@@ -33,7 +29,7 @@ class UserController extends Controller
         return $model->_user;
     }
 
-    Yii::$app->response->statusCode = 442;
+    Yii::$app->response->statusCode = 404;
     return [
       'errors' => $model->errors
     ];

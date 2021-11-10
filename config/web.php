@@ -27,7 +27,7 @@ $config = [
         'user' => [
             'identityClass'   => 'app\models\User',
             'enableAutoLogin' => true,
-            'enableSession'   => false,
+            'enableSession'   => true,
             'loginUrl'        => null
         ],
         'errorHandler' => [
@@ -46,28 +46,6 @@ $config = [
               'encryption' => 'ssl',
             ],
         ],
-        // 'mailer' => [
-        //     'class' => 'yii\swiftmailer\Mailer',
-        //     // send all mails to a file by default. You have to set
-        //     // 'useFileTransport' to false and configure a transport
-        //     // for the mailer to send real emails.
-        //     // 'port' => '587', // Port 25 is a very common port too
-        //     'useFileTransport' => true,
-        //     'transport' => [
-        //       'class' => 'Swift_SmtpTransport',
-        //       'host' => 'smtp.gmail.com',  // e.g. smtp.mandrillapp.com or smtp.gmail.com
-        //       'username' => 'andri.rizki007@gmail.com',
-        //       'password' => 'Andririzki12345',
-        //       'port' => '465', // Port 25 is a very common port too
-        //       'encryption' => 'ssl', // It is often used, check your provider or mail server specs
-        //       // 'plugins' => [
-        //       //     [
-        //       //         'class' => 'Swift_Plugins_ThrottlerPlugin',
-        //       //         'constructArgs' => [20],
-        //       //     ],
-        //       // ],
-        //     ],
-        // ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
@@ -79,8 +57,9 @@ $config = [
         ],
         'db' => $db,
         'urlManager' => [
-            'class'           => 'yii\web\UrlManager',
+            // 'class'           => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
+            // 'enableStrictParsing'   => true,
             'showScriptName'  => false,
             'rules' => [
                 // 'POST oauth2<action:\w+>' => 'api/user/login<action>',
@@ -95,17 +74,20 @@ $config = [
                 [
                   'class'      => 'yii\rest\UrlRule',
                   'pluralize'  => false,
-                  'controller' => [
-                    'api/v1/anggota'   => 'api/anggota',
-                    'api/v1/kehadiran' => 'api/kehadiran'
-                  ]
+                  'controller' => ['api/v1/anggota' => 'api/v1/anggota'],
+                ],
+                [
+                  'class'      => 'yii\rest\UrlRule',
+                  'pluralize'  => false,
+                  'controller' => ['api/v1/kehadiran' => 'api/v1/kehadiran'],
                 ]
             ],
         ],
     ],
     'modules' => [
-      'api'   => [
-        'class' => '\app\modules\api\Module'
+      'api' => [
+        // 'basePath' => '@app/modules/v1',
+        'class' => '\app\modules\api\v1\Module'
       ],
       // 'oauth2' => [
       //   'class' => 'filsh\yii2\oauth2server\Module',

@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\api\models;
+namespace app\modules\api\v1\models;
 
 use Yii;
-use app\modules\api\resources\UserResource;
+use app\modules\api\v1\resources\UserResource;
 
 class FormLogin extends \app\models\FormLogin {
 

@@ -19,7 +19,7 @@ class FormKehadiran extends Model {
     if ($this->validate()) {
       $api = new Api;
       $simpan = $api->simpan_kehadiran($this->nomor_anggota, Yii::$app->user->identity->user_id);
-      return $simpan['isStatus'];
+      return ($simpan['status'] == 'success') ? true : false;
     } else {
       return false;
     }

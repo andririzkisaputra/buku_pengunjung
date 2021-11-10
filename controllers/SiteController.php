@@ -93,25 +93,9 @@ class SiteController extends Controller
       if ($model->load(Yii::$app->request->post()) && $model->validate()) {
         $model->scenario = Anggota::SCENARIO_CREATE;
         $post    = Yii::$app->request->post('Anggota');
-        $model->gambar = UploadedFile::getInstance($model, 'gambar');
-        $nomor_anggota = rand(10000, 99999);
-        $nama_format = strtolower($post['nama'].' '.$nomor_anggota.' '.date('Y-m-d'));
-        $nama_format = str_replace(" ", "-", $nama_format).'.'.$model->gambar->extension;
-        $model->gambar->saveAs('uploads/'.$nama_format);
-
-        $imagine = Image::getImagine();
-        $image = $imagine->open('uploads/'.$nama_format);
-        $image->resize(new Box(300, 400))->save('uploads/thumb_'.$nama_format, ['quality' => 70]);
-
-        $model->attributes    = Yii::$app->request->post('Anggota');
-        $model->nama          = $post['nama'];
-        $model->nomor_anggota = $nomor_anggota;
-        $model->gambar        = $nama_format;
-        $model->created_by    = Yii::$app->user->identity->user_id;
-        $model->created_at    = date('Y-m-d h:i:s');;
-        $model->save();
-
-        if ($model->save()) {
+        $api     = new Api;
+        $simpan  = $api->simpan_anggota($model, $post);
+        if ($simpan['status'] == 'success') {
           $this->redirect('@web/site/master-data');
         }
       } else {

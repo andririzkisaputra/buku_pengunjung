@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\api\resources;
+namespace app\modules\api\v1\resources;
 
 use app\models\Kehadiran;
 
