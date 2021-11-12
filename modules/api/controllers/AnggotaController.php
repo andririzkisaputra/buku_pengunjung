@@ -3,25 +3,18 @@ namespace app\modules\api\controllers;
 
 use Yii;
 use app\modules\api\resources\AnggotaResource;
-use app\modules\api\resources\UsesrResource;
+use app\modules\api\resources\UserResource;
 use yii\rest\ActiveController;
 use yii\filters\auth\HttpBearerAuth;
 use app\models\Anggota;
 use app\models\User;
 use app\models\Api;
 use yii\helpers\Url;
-use yii\data\ActiveDataProvider;
-// use yii\authclient\OAuth2;
-//
-// use yii\helpers\ArrayHelper;
-// use yii\filters\auth\QueryParamAuth;
-// use filsh\yii2\oauth2server\filters\ErrorToExceptionFilter;
-// use filsh\yii2\oauth2server\filters\auth\CompositeAuth;
+use yii\db\BaseActiveRecord;
 
 class AnggotaController extends ActiveController {
 
   public $modelClass     = AnggotaResource::class;
-  public $modelClassUser = UsesrResource::class;
 
   public function behaviors() {
     $behaviors = parent::behaviors();
@@ -43,10 +36,8 @@ class AnggotaController extends ActiveController {
           'checkAccess'    => [$this, 'checkAccess'],
           'prepareDataProvider' => function ($action) {
             $baseUrl = Url::base('http');
-            $get   = Yii::$app->request->get();
             $query = new Api;
-            $user  = User::find()->select('user_id')->where(['auth_key' => $get['key']])->one();
-            $where = "created_by = {$user->user_id}";
+            $where = ['created_by' => Yii::$app->user->identity->user_id];
             $data  = $query->select_tabel('*', 'anggota', $where, false, false);
             if ($data['data']) {
               foreach ($data['data'] as $key => $value) {

@@ -9,6 +9,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use OAuth2\Storage\UserCredentialsInterface;
+use yii\db\Expression;
 
 class User extends ActiveRecord implements IdentityInterface, UserCredentialsInterface {
 
@@ -22,18 +23,18 @@ class User extends ActiveRecord implements IdentityInterface, UserCredentialsInt
   public function behaviors() {
     return [
       TimestampBehavior::class,
-      // [
-        // 'class' => BlameableBehavior::class,
-        // 'updatedByAttribute' => false
-      // ],
-      // 'timestamp' => [
-      //     'class' => 'yii\behaviors\TimestampBehavior',
-      //     'attributes' => [
-      //         ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-      //         ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
-      //     ],
-      //     'value' => new Expression('NOW()'),
-      // ],
+      [
+        'class' => BlameableBehavior::class,
+        'updatedByAttribute' => false
+      ],
+      'timestamp' => [
+          'class' => 'yii\behaviors\TimestampBehavior',
+          'attributes' => [
+              ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+              ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+          ],
+          'value' => new Expression('NOW()'),
+      ],
     ];
   }
 
@@ -57,7 +58,7 @@ class User extends ActiveRecord implements IdentityInterface, UserCredentialsInt
   }
 
   public static function findIdentityByAccessToken($token, $userType = null) {
-    return static::findOne(['access_token' => $token]);
+    return static::find()->where(['=', 'access_token', $token])->andWhere(['>=', 'expires_in', new Expression('NOW()')])->one();
   }
 
   public static function findByUsername($username) {
@@ -113,11 +114,11 @@ class User extends ActiveRecord implements IdentityInterface, UserCredentialsInt
   }
 
   public function generateAuthKey() {
-    $this->auth_key = Yii::$app->security->generateRandomString();
+    $this->auth_key = Yii::$app->security->generateRandomString(40);
   }
 
   public function generateAccessToken() {
-    $this->access_token = Yii::$app->security->generateRandomString();
+    $this->access_token = Yii::$app->security->generateRandomString(40);
   }
 
   public function generatePasswordResetToken() {

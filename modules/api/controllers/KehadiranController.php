@@ -9,7 +9,6 @@ use yii\rest\ActiveController;
 use yii\filters\auth\HttpBearerAuth;
 use app\models\Api;
 use yii\helpers\Url;
-use app\models\User;
 
 class KehadiranController extends ActiveController {
 
@@ -37,11 +36,10 @@ class KehadiranController extends ActiveController {
             $baseUrl     = Yii::$app->getBasePath();
             $get         = Yii::$app->request->get();
             $query       = new Api;
-            $user        = UserResource::find()->select('user_id')->where(['auth_key' => $get['key']])->one();
-            $where       = "kehadiran.created_by = {$user->user_id} AND kehadiran.created_at LIKE '%".date('Y-m-d')."%'";
-            $where_total = "kehadiran.created_by = {$user->user_id}";
-            $where_tahun = "kehadiran.created_by = {$user->user_id} AND kehadiran.created_at LIKE '%".date('Y')."%'";
-            $where_bulan = "kehadiran.created_by = {$user->user_id} AND kehadiran.created_at LIKE '%".date('Y-m')."%'";
+            $where       = "kehadiran.created_by = ".Yii::$app->user->identity->user_id." AND kehadiran.created_at LIKE '%".date('Y-m-d')."%'";
+            $where_total = "kehadiran.created_by = ".Yii::$app->user->identity->user_id;
+            $where_tahun = "kehadiran.created_by = ".Yii::$app->user->identity->user_id." AND kehadiran.created_at LIKE '%".date('Y')."%'";
+            $where_bulan = "kehadiran.created_by = ".Yii::$app->user->identity->user_id." AND kehadiran.created_at LIKE '%".date('Y-m')."%'";
             $total       = $query->select_join('*', 'kehadiran', 'anggota', 'kehadiran.anggota_id = anggota.anggota_id', $where_total, false,  'kehadiran.anggota_id', false);
             $tahun       = $query->select_join('*', 'kehadiran', 'anggota', 'kehadiran.anggota_id = anggota.anggota_id', $where_tahun, false,  'kehadiran.anggota_id', false);
             $bulan       = $query->select_join('*', 'kehadiran', 'anggota', 'kehadiran.anggota_id = anggota.anggota_id', $where_bulan, false,  'kehadiran.anggota_id', false);
