@@ -13,11 +13,14 @@ use Imagine\Image\Box;
 
 class Api extends Model {
 
-  public function count_select($tabel, $where = false, $andWhere) {
+  public function count_select($tabel, $where = false, $andWhere = false) {
     $count = new Query;
     $count->from($tabel);
     if ($where) {
-      $count->where($where)->andWhere($andWhere);
+      $count->where($where);
+      if ($andWhere) {
+        $count->andWhere($andWhere);
+      }
     }
     return $count->count();
   }
@@ -119,27 +122,28 @@ class Api extends Model {
     return $response;
   }
 
-  public function simpan_kehadiran($nomor_anggota, $user_id) {
-    $cek_data = $this->count_select('anggota', array('=', 'nomor_anggota', $nomor_anggota), array('=', 'created_by', $user_id));
-    if ($cek_data) {
+  public function simpan_kehadiran($anggota_id, $user_id = false) {
+    if ($anggota_id) {
       $insert = new Kehadiran;
-      $insert->nomor_anggota = $nomor_anggota;
-      $insert->created_by    = $user_id;
+      $insert->anggota_id = $anggota_id;
+      if ($user_id) {
+        $insert->created_by    = $user_id;
+      }
       $insert->created_at    = date('Y-m-d H:s:i');
       $insert->save();
       if ($insert) {
         $response = [
           'kode'     => 200,
-          'status'   => 'success',
+          'status'   => 'sukses',
           'data'     => $insert,
-          'message'  => 'data berhasil disimpan'
+          'message'  => 'Berhasil'
         ];
       } else {
         $response = [
           'kode'     => 404,
           'status'   => 'error',
           'data'     => [],
-          'message'  => 'gagal menyimpan data'
+          'message'  => 'Gagal'
         ];
       }
     } else {
@@ -156,7 +160,7 @@ class Api extends Model {
   public function simpan_anggota($model, $post) {
     $model->gambar = UploadedFile::getInstance($model, 'gambar');
     $nomor_anggota = rand(10000, 99999);
-    $nama_format = strtolower($post['nama'].' '.$nomor_anggota.' '.date('Y-m-d'));
+    $nama_format   = strtolower($post['nama'].' '.$nomor_anggota.' '.date('Y-m-d'));
     if ($model->gambar) {
       $nama_format = str_replace(" ", "-", $nama_format).'.'.$model->gambar->extension;
       $model->gambar->saveAs('uploads/'.$nama_format);
@@ -170,21 +174,23 @@ class Api extends Model {
     $model->nama          = $post['nama'];
     $model->nomor_anggota = $nomor_anggota;
     $model->gambar        = $nama_format;
-    $model->created_by    = (Yii::$app->user->identity->user_id) ? Yii::$app->user->identity->user_id : $post['created_by'];
+    if (Yii::$app->user->identity->user_id) {
+      $model->created_by  = Yii::$app->user->identity->user_id;
+    }
     $model->created_at    = date('Y-m-d h:i:s');
     if ($model->save()) {
       $response = [
         'kode'     => 201 ,
         'status'   => 'success',
         'data'     => $model,
-        'message'  => 'data berhasil disimpan',
+        'message'  => 'Berhasil',
       ];
     } else {
       $response = [
         'kode'     => 404,
         'status'   => 'error',
         'data'     => [],
-        'message'  => 'gagal'
+        'message'  => 'Gagal'
       ];
     }
     return $response;;
@@ -241,15 +247,17 @@ class Api extends Model {
   public function delete_anggota($anggota_id, $created_by = false, $gambar = false, $auth_key = false) {
     if ($auth_key) {
       $user     = User::find()->select('user_id')->where(['auth_key' => $auth_key])->one();
-      $cek_data = Anggota::find()->where(['anggota_id' => $anggota_id, 'created_by' => $user->user_id])->count();
+      $cek_data = Anggota::find()->where(['anggota_id' => $anggota_id])->count();
     } else {
-      $cek_data = Anggota::find()->where(['anggota_id' => $anggota_id, 'created_by' => $created_by])->count();
+      $cek_data = Anggota::find()->where(['anggota_id' => $anggota_id])->count();
     }
 
     if ($cek_data) {
-      $delete = Anggota::findOne([
+      $data = [
         'anggota_id' => $anggota_id,
-      ]);
+      ];
+      $this->delete_kehadiran($data);
+      $delete = Anggota::findOne($data);
       if ($gambar) {
         $baseUrl = Yii::$app->getBasePath();
         @unlink($baseUrl.'/uploads/'.$gambar);
@@ -259,16 +267,16 @@ class Api extends Model {
       if ($delete) {
         $response = [
           'kode'     => 200,
-          'status'   => 'success',
+          'status'   => 'sukses',
           'data'     => [],
-          'message'  => 'data berhasil dihapus'
+          'message'  => 'Berhasil'
         ];
       } else {
         $response = [
           'kode'     => 404,
           'status'   => 'error',
           'data'     => [],
-          'message'  => 'gagal menghapus data'
+          'message'  => 'Gagal'
         ];
       }
     } else {
@@ -276,10 +284,15 @@ class Api extends Model {
         'kode'     => 405,
         'status'   => 'error',
         'data'     => [],
-        'message'  => 'data tidak bisa diubah'
+        'message'  => 'data tidak bisa dihapus'
       ];
     }
     return $response;
+  }
+
+  public function delete_kehadiran($data) {
+    $delete = Kehadiran::findOne($data);
+    return $delete->delete();
   }
 
 }

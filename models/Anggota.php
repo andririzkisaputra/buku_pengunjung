@@ -43,7 +43,7 @@ class Anggota extends ActiveRecord
         TimestampBehavior::class,
         [
           'class' => BlameableBehavior::class,
-          'updatedByAttribute' => false
+          'updatedByAttribute'    => false
         ],
         'timestamp' => [
             'class' => 'yii\behaviors\TimestampBehavior',

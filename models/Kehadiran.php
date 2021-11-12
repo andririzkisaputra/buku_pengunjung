@@ -12,7 +12,7 @@ use yii\db\Expression;
  * This is the model class for table "{{%kehadiran}}".
  *
  * @property int $kehadiran_id
- * @property string|null $nomor_anggota
+ * @property string|null $anggota_id
  * @property int|null $created_by
  * @property string|null $created_at
  * @property string $updated_at
@@ -59,11 +59,10 @@ class Kehadiran extends ActiveRecord
     {
         return [
             [['created_by'], 'integer'],
-            [['nomor_anggota'], 'string', 'max' => 15],
             [['created_at'], 'string', 'max' => 45],
             [['updated_at'], 'string', 'max' => 25],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'user_id']],
-            [['nomor_anggota'], 'exist', 'skipOnError' => true, 'targetClass' => Anggota::className(), 'targetAttribute' => ['nomor_anggota' => 'nomor_anggota']],
+            [['anggota_id'], 'exist', 'skipOnError' => true, 'targetClass' => Anggota::className(), 'targetAttribute' => ['anggota_id' => 'anggota_id']],
         ];
     }
 
@@ -74,7 +73,7 @@ class Kehadiran extends ActiveRecord
     {
         return [
             'kehadiran_id' => 'Kehadiran ID',
-            'nomor_anggota' => 'Nomor Anggota',
+            'anggota_id' => 'Anggota ID',
             'created_by' => 'Created By',
             'created_at' => 'Created At',
         ];
@@ -97,7 +96,7 @@ class Kehadiran extends ActiveRecord
      */
     public function getNomorAnggota()
     {
-        return $this->hasOne(Anggota::className(), ['nomor_anggota' => 'nomor_anggota']);
+        return $this->hasOne(Anggota::className(), ['anggota_id' => 'anggota_id']);
     }
 
     /**

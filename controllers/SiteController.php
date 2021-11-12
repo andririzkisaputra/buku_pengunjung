@@ -60,11 +60,11 @@ class SiteController extends Controller
       $hari_ini          = date('Y-m-d');
       $bulan_ini         = date('Y-m');
       $tahun_ini         = date('Y');
-      $kunjungan_total   = $kehadiran->from('kehadiran')->groupBy('nomor_anggota')->andWhere(['=', 'created_by', $user_id])->count();
-      $kunjungan_harian  = $kehadiran->from('kehadiran')->where(['like', 'created_at', $hari_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('nomor_anggota')->count();
-      $kunjungan_bulanan = $kehadiran->from('kehadiran')->where(['like', 'created_at', $bulan_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('nomor_anggota')->count();
-      $kunjungan_tahunan = $kehadiran->from('kehadiran')->where(['like', 'created_at', $tahun_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('nomor_anggota')->count();
-      $kehadiran         = $api->select_join('kehadiran.*, anggota.nama', 'kehadiran', 'anggota', 'anggota.nomor_anggota = kehadiran.nomor_anggota', ['like', 'kehadiran.created_at', $hari_ini], ['=', 'kehadiran.created_by', $user_id], ['kehadiran.nomor_anggota']);
+      $kunjungan_total   = $kehadiran->from('kehadiran')->groupBy('anggota_id')->andWhere(['=', 'created_by', $user_id])->count();
+      $kunjungan_harian  = $kehadiran->from('kehadiran')->where(['like', 'created_at', $hari_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('anggota_id')->count();
+      $kunjungan_bulanan = $kehadiran->from('kehadiran')->where(['like', 'created_at', $bulan_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('anggota_id')->count();
+      $kunjungan_tahunan = $kehadiran->from('kehadiran')->where(['like', 'created_at', $tahun_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('anggota_id')->count();
+      $kehadiran         = $api->select_join('kehadiran.*, anggota.nama', 'kehadiran', 'anggota', 'anggota.anggota_id = kehadiran.anggota_id', ['like', 'kehadiran.created_at', $hari_ini], ['=', 'kehadiran.created_by', $user_id], ['kehadiran.anggota_id']);
       if ($model->load(Yii::$app->request->post())) {
         if ($model->simpan_kehadiran()) {
           Yii::$app->session->setFlash('success', 'Data berhasil ditambahkan.');

@@ -21,6 +21,10 @@ $config = [
               'application/json' => 'yii\web\JsonParser',
             ]
         ],
+        // 'response' => [
+        //   'format' => yii\web\Response::FORMAT_JSON,
+        //   'charset' => 'UTF-8',
+        // ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -57,11 +61,18 @@ $config = [
         ],
         'db' => $db,
         'urlManager' => [
+          'enablePrettyUrl'     => true,
+          'enableStrictParsing' => false,
+          'showScriptName'      => false,
+          'rules' => [
+              ['class' => 'yii\rest\UrlRule', 'controller' => ['api/anggota', 'api/kehadiran']],
+              // ['class' => 'yii\rest\UrlRule', 'controller' => 'api/kehadiran']
+          ],
             // 'class'           => 'yii\web\UrlManager',
-            'enablePrettyUrl' => true,
+            // 'enablePrettyUrl' => true,
             // 'enableStrictParsing'   => true,
-            'showScriptName'  => false,
-            'rules' => [
+            // 'showScriptName'  => false,
+            // 'rules' => [
                 // 'POST oauth2<action:\w+>' => 'api/user/login<action>',
                 // 'oauth2' => 'oauth2/login',
                 // [
@@ -71,23 +82,23 @@ $config = [
                 //     'authorize' => 'site/login'
                 //   ]
                 // ],
-                [
-                  'class'      => 'yii\rest\UrlRule',
-                  'pluralize'  => false,
-                  'controller' => ['api/v1/anggota' => 'api/v1/anggota'],
-                ],
-                [
-                  'class'      => 'yii\rest\UrlRule',
-                  'pluralize'  => false,
-                  'controller' => ['api/v1/kehadiran' => 'api/v1/kehadiran'],
-                ]
-            ],
+                // [
+                //   'class'      => 'yii\rest\UrlRule',
+                //   'pluralize'  => false,
+                //   'controller' => ['api/v1/anggota' => 'api/v1/anggota'],
+                // ],
+                // [
+                //   'class'      => 'yii\rest\UrlRule',
+                //   'pluralize'  => false,
+                //   'controller' => ['api/v1/kehadiran' => 'api/v1/kehadiran'],
+                // ]
+            // ],
         ],
     ],
     'modules' => [
       'api' => [
         // 'basePath' => '@app/modules/v1',
-        'class' => '\app\modules\api\v1\Module'
+        'class' => '\app\modules\api\Module'
       ],
       // 'oauth2' => [
       //   'class' => 'filsh\yii2\oauth2server\Module',

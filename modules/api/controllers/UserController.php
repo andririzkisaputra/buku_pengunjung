@@ -1,10 +1,10 @@
 <?php
-namespace app\modules\api\v1\controllers;
+namespace app\modules\api\controllers;
 
 use Yii;
 use \yii\rest\Controller;
-use \app\modules\api\v1\models\FormLogin;
-use \app\modules\api\v1\models\FormRegistrasi;
+use \app\modules\api\models\FormLogin;
+use \app\modules\api\models\FormRegistrasi;
 /**
  *
  */

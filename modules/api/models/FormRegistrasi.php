@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\api\v1\models;
+namespace app\modules\api\models;
 
 use Yii;
 use yii\base\Model;
-use app\modules\api\v1\resources\UserResource;
+use app\modules\api\resources\UserResource;
 
 class FormRegistrasi extends Model {
 
