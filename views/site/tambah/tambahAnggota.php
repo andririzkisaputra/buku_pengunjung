@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => 'login-form',
         'options' => ['class' => 'form-horizontal'],
       ]); ?>
-        <?= $form->field($model, 'nama') ?>
+        <?= $form->field($model, 'nama')->textInput(['id' => 'nama']) ?>
         <div class="form-group">
           <a id="start-camera" class="btn btn-primary">Foto</a>
           <a id="click-photo" class="btn btn-primary">Click Photo</a>
@@ -95,9 +95,21 @@ let canvas = document.querySelector("#canvas");
     $('#click-photo').hide();
     $('#canvas').show();
    	canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-   	let image_data_url = canvas.toDataURL('image/jpeg');
-
-   	// data url of the image
-   	// console.log(image_data_url);
+   	let image_data_url = canvas.toDataURL('image/jpeg').replace(/^data:image\/jpeg;base64,/, "");
+    let nama           = $('#nama').val();
+    $.ajax({
+      type:'POST',
+      url:"upload-gambar",
+      data:{
+        'gambar' : image_data_url,
+        'nama'   : nama
+      },
+      success:function(response){
+          console.log('success');
+      },
+      error:function(){
+          console.log('error');
+      }
+    });
   });
 </script>

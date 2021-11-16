@@ -275,4 +275,12 @@ class SiteController extends Controller
     return $this->goHome();
   }
 
+  public function actionUploadGambar() {
+    $post        = Yii::$app->request->post();
+    $data        = base64_decode($post['gambar']);
+    $nama_format = strtolower($post['nama']);
+    $nama_format = str_replace(" ", "-", $nama_format).'.jpg';
+    return file_put_contents('uploads/'.$nama_format, $data);
+  }
+
 }

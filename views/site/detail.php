@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-master-data">
 
   <div class="layout-data-master">
-    <?php echo Html::img('@web/uploads/thumb_'.$model['gambar'], ['class' => 'detail-img']);?>
+    <?php echo Html::img('@web/uploads/'.$model['gambar'], ['class' => 'detail-img']);?>
     <table class="col-lg-12 detail-info">
       <tr>
         <td class="detail-padding">Nomor Anggota</td>

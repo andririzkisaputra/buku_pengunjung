@@ -40,7 +40,7 @@ class Api extends Model {
     $semua->orderBy(['kehadiran.created_at' => SORT_DESC]);
     if ($pages) {
       $countQuery = clone $semua;
-      $pages = new Pagination(['totalCount' => $countQuery->count(), 'defaultPageSize' => 1]);
+      $pages = new Pagination(['totalCount' => $countQuery->count(), 'defaultPageSize' => 10]);
       $semua->offset($pages->offset)->limit($pages->limit);
     }
     if ($semua->all()) {
@@ -160,16 +160,18 @@ class Api extends Model {
   public function simpan_anggota($model, $post) {
     $model->gambar = UploadedFile::getInstance($model, 'gambar');
     $nomor_anggota = rand(10000, 99999);
-    $nama_format   = strtolower($post['nama'].' '.$nomor_anggota.' '.date('Y-m-d'));
-    if ($model->gambar) {
-      $nama_format = str_replace(" ", "-", $nama_format).'.'.$model->gambar->extension;
-      $model->gambar->saveAs('uploads/'.$nama_format);
+    // $nama_format   = strtolower($post['nama'].' '.$nomor_anggota.' '.date('Y-m-d'));
+    // if ($model->gambar) {
+    //   $nama_format = str_replace(" ", "-", $nama_format).'.'.$model->gambar->extension;
+    //   $model->gambar->saveAs('uploads/'.$nama_format);
+    //
+    //   $imagine = Image::getImagine();
+    //   $image = $imagine->open('uploads/'.$nama_format);
+    //   $image->resize(new Box(300, 400))->save('uploads/thumb_'.$nama_format, ['quality' => 70]);
+    // }
 
-      $imagine = Image::getImagine();
-      $image = $imagine->open('uploads/'.$nama_format);
-      $image->resize(new Box(300, 400))->save('uploads/thumb_'.$nama_format, ['quality' => 70]);
-    }
-
+    $nama_format = strtolower($post['nama']);
+    $nama_format = str_replace(" ", "-", $nama_format).'.jpg';
     $model->attributes    = Yii::$app->request->post('Anggota');
     $model->nama          = $post['nama'];
     $model->nomor_anggota = $nomor_anggota;
