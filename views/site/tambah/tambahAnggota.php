@@ -21,16 +21,19 @@ $this->params['breadcrumbs'][] = $this->title;
       ]); ?>
         <?= $form->field($model, 'nama')->textInput(['id' => 'nama']) ?>
         <div class="form-group">
-          <a id="start-camera" class="btn btn-primary">Foto</a>
+          <a id="start-camera" class="btn btn-primary">Depan</a>
+          <a id="back-camera" class="btn btn-primary">Belakang</a>
+          <a id="stop-camera" class="btn btn-primary">Refresh</a>
+          <a id="reload-camera" class="btn btn-primary">Ulang</a>
           <a id="click-photo" class="btn btn-primary">Click Photo</a>
         </div>
-        <video id="video" width="320" height="240" autoplay></video>
+        <video id="video" width="700" height="510" autoplay></video>
         <div class="form-group" style="background-color:#cccccc; display: flex; justify-content: center;">
           <?php if ($mobile): ?>
-            <canvas id="canvas" width="240" height="320"></canvas>
+            <canvas id="canvas" width="510" height="700"></canvas>
           <?php endif; ?>
           <?php if (!$mobile): ?>
-            <canvas id="canvas" width="320" height="240"></canvas>
+            <canvas id="canvas" width="700" height="510"></canvas>
           <?php endif; ?>
         </div>
         <?php
@@ -73,26 +76,44 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <script type="text/javascript">
-$( document ).ready(function() {
-  $('#click-photo').hide();
-  $('#canvas').hide();
-});
-let camera_button = document.querySelector("#start-camera");
-let video = document.querySelector("#video");
-let click_button = document.querySelector("#click-photo");
-let canvas = document.querySelector("#canvas");
+  $( document ).ready(function() {
+    $('#click-photo').hide();
+    $('#canvas').hide();
+    $('#stop-camera').hide();
+    $('#reload-camera').hide();
+  });
+  let camera_button = document.querySelector("#start-camera");
+  let video         = document.querySelector("#video");
+  let click_button  = document.querySelector("#click-photo");
+  let canvas        = document.querySelector("#canvas");
+  let back_camera   = document.querySelector("#back-camera");
+  let stop          = document.querySelector("#stop-camera");
 
-  camera_button.addEventListener('click', async function() {
-    let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+  $( "#start-camera" ).click(async function() {
+    let stream = await navigator.mediaDevices.getUserMedia({
+      video :
+        {
+          minAspectRatio: 5.000,
+          minFrameRate: 60,
+          width: 640,
+          heigth: 480
+        },
+      audio : false
+    });
   	video.srcObject = stream;
+    $('#stop-camera').show();
     $('#click-photo').show();
     $('#video').show();
     $('#canvas').hide();
+    $('#start-camera').hide();
+    $('#back-camera').hide();
   });
 
-  click_button.addEventListener('click', function() {
+  $( "#click-photo" ).click(async function() {
     $('#video').hide();
     $('#click-photo').hide();
+    $('#stop-camera').hide();
+    $('#reload-camera').show();
     $('#canvas').show();
    	canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
    	let image_data_url = canvas.toDataURL('image/jpeg').replace(/^data:image\/jpeg;base64,/, "");
@@ -112,4 +133,33 @@ let canvas = document.querySelector("#canvas");
       }
     });
   });
+
+  $( "#back-camera" ).click(async function() {
+    let stream = await navigator.mediaDevices.getUserMedia({
+      video : {
+        facingMode: 'environment'
+      },
+      audio : false
+    });
+    video.srcObject = stream;
+    $('#click-photo').show();
+    $('#stop-camera').show();
+    $('#video').show();
+    $('#canvas').hide();
+    $('#start-camera').hide();
+    $('#back-camera').hide();
+  });
+
+  $("#stop-camera" ).click(async function() {
+    location.reload();
+  });
+
+  $("#reload-camera" ).click(async function() {
+    $('#click-photo').show();
+    $('#stop-camera').show();
+    $('#video').show();
+    $('#canvas').hide();
+    $('#reload-camera').hide();
+  });
+
 </script>

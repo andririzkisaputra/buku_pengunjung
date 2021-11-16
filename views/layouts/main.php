@@ -41,6 +41,7 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'Anggota', 'url' => ['/site/anggota']],
             ['label' => 'Master Data', 'url' => ['/site/master-data']],
+            ['label' => 'Api Akses', 'url' => ['/site/api-akses']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (

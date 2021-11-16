@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Api;
+use app\models\User;
 use app\models\Kehadiran;
 use app\models\FormRegistrasi;
 use app\models\FormLogin;
@@ -281,6 +282,31 @@ class SiteController extends Controller
     $nama_format = strtolower($post['nama']);
     $nama_format = str_replace(" ", "-", $nama_format).'.jpg';
     return file_put_contents('uploads/'.$nama_format, $data);
+  }
+
+  public function actionApiAkses() {
+    if (!Yii::$app->user->isGuest) {
+      $api   = new Api;
+      $model = $api->select_tabel_row('*', 'user', ['=', 'user_id', Yii::$app->user->identity->user_id]);
+
+      return $this->render('api', [
+        'model' => $model['data']
+      ]);
+    } else {
+      $this->redirect('@web/site/login');
+    }
+  }
+
+  public function actionRefreshToken() {
+    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $security = \Yii::$app->security;
+    $data = User::find()->where(['client_id' => $_GET['client_id']])->one();
+    $data->access_token = $security->generateRandomString(50);
+    if ($data->expires_in < date('Y-m-d H:i:s')) {
+      $data->expires_in   = date('Y-m-d H:i:s', strtotime('+30 days', strtotime(date('Y-m-d H:i:s'))));
+    }
+    $data->save();
+    $this->redirect('@web/site/api-akses');
   }
 
 }
