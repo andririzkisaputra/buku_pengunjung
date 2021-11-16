@@ -17,9 +17,10 @@ class FormKehadiran extends Model {
 
   public function simpan_kehadiran() {
     if ($this->validate()) {
-      $api = new Api;
-      $simpan = $api->simpan_kehadiran($this->nomor_anggota, Yii::$app->user->identity->user_id);
-      return ($simpan['status'] == 'success') ? true : false;
+      $api  = new Api;
+      $anggota = Anggota::find()->where(['=', 'nomor_anggota', $this->nomor_anggota])->one();
+      $simpan = $api->simpan_kehadiran($anggota['anggota_id'], Yii::$app->user->identity->user_id);
+      return ($simpan['status'] == 'sukses') ? true : false;
     } else {
       return false;
     }

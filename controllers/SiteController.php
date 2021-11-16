@@ -88,6 +88,7 @@ class SiteController extends Controller
   }
 
   public function actionAnggota() {
+    $mobile = $this->isMobile();
     if (!Yii::$app->user->isGuest) {
       $model = new Anggota;
       if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -102,12 +103,17 @@ class SiteController extends Controller
         return $this->render('tambah/tambahAnggota', [
           'title'   => 'Tambah Anggota',
           'model'   => $model,
-          'is_edit' => false
+          'is_edit' => false,
+          'mobile'  => $mobile
         ]);
       }
     } else {
       $this->redirect('@web/site/login');
     }
+  }
+
+  public function isMobile() {
+    return is_numeric(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile"));
   }
 
   public function actionMasterData() {
@@ -125,6 +131,15 @@ class SiteController extends Controller
   }
 
   public function actionDetail($id) {
+    $api = new Api;
+    $model = $api->select_tabel_row('*', 'anggota', ['=', 'anggota_id', $id]);
+    $model['data']['status'] = ($model['data']['is_active'] == 0) ? 'Suspend' : 'Aktif';
+    return $this->renderAjax('detail', [
+      'model' => $model['data']
+    ]);
+  }
+
+  public function actionFoto($id) {
     $api = new Api;
     $model = $api->select_tabel_row('*', 'anggota', ['=', 'anggota_id', $id]);
     $model['data']['status'] = ($model['data']['is_active'] == 0) ? 'Suspend' : 'Aktif';

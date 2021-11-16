@@ -245,18 +245,21 @@ class Api extends Model {
   }
 
   public function delete_anggota($anggota_id, $created_by = false, $gambar = false, $auth_key = false) {
+    $data = [
+      'anggota_id' => $anggota_id,
+    ];
     if ($auth_key) {
       $user     = User::find()->select('user_id')->where(['auth_key' => $auth_key])->one();
-      $cek_data = Anggota::find()->where(['anggota_id' => $anggota_id])->count();
+      $cek_data = Anggota::find()->where($data)->count();
     } else {
-      $cek_data = Anggota::find()->where(['anggota_id' => $anggota_id])->count();
+      $cek_data      = Anggota::find()->where($data)->count();
+      $cek_kehadiran = Kehadiran::find()->where($data)->count();
     }
 
     if ($cek_data) {
-      $data = [
-        'anggota_id' => $anggota_id,
-      ];
-      $this->delete_kehadiran($data);
+      if ($cek_kehadiran) {
+        $this->delete_kehadiran($data);
+      }
       $delete = Anggota::findOne($data);
       if ($gambar) {
         $baseUrl = Yii::$app->getBasePath();

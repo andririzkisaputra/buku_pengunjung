@@ -26,7 +26,8 @@ class AnggotaController extends ActiveController {
 
   public function actions()
   {
-
+    // print_r($thisrequestedRoute);
+    // exit;
     return array_merge(
       parent::actions(),
       [
@@ -69,7 +70,7 @@ class AnggotaController extends ActiveController {
             $data = $query->delete_anggota($get);
             return $data;
           }
-        ],
+        ]
       ]
     );
   }
