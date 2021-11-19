@@ -25,15 +25,16 @@ $this->params['breadcrumbs'][] = $this->title;
           <a id="back-camera" class="btn btn-primary">Belakang</a>
           <a id="stop-camera" class="btn btn-primary">Refresh</a>
           <a id="reload-camera" class="btn btn-primary">Ulang</a>
-          <a id="click-photo" class="btn btn-primary">Click Photo</a>
+          <a id="click-photo" class="btn btn-primary video-options">Click Photo</a>
+          <input type="file" accept="image/*" capture="environment">
         </div>
-        <video id="video" width="700" height="510" autoplay></video>
-        <div class="form-group" style="background-color:#cccccc; display: flex; justify-content: center;">
+        <video id="video" width="600" height="410" autoplay></video>
+        <div class="form-group">
           <?php if ($mobile): ?>
             <canvas id="canvas" width="510" height="700"></canvas>
           <?php endif; ?>
           <?php if (!$mobile): ?>
-            <canvas id="canvas" width="700" height="510"></canvas>
+            <canvas id="canvas" width="600" height="410"></canvas>
           <?php endif; ?>
         </div>
         <?php
@@ -81,6 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
     $('#canvas').hide();
     $('#stop-camera').hide();
     $('#reload-camera').hide();
+    $('#video').hide();
   });
   let camera_button = document.querySelector("#start-camera");
   let video         = document.querySelector("#video");

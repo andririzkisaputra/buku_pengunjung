@@ -18,7 +18,7 @@ if required_plugins_installed
 end
 
 domains = {
-  app: 'pengunjung.dev'
+  app: 'pengunjung.test'
 }
 
 vagrantfile_dir_path = File.dirname(__FILE__)

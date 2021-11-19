@@ -8,10 +8,10 @@ use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use OAuth2\Storage\UserCredentialsInterface;
+// use OAuth2\Storage\UserCredentialsInterface;
 use yii\db\Expression;
 
-class User extends ActiveRecord implements IdentityInterface, UserCredentialsInterface {
+class User extends ActiveRecord implements IdentityInterface {
 
   const STATUS_DELETED = '0';
   const STATUS_ACTIVE  = '1';
