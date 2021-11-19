@@ -1,6 +1,6 @@
 <p align="center">
-    <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
+    <a href="https://github.com/andririzkisaputra" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/32899097?v=4" height="100px">
     </a>
     <h1 align="center">Pengunjung</h1>
     <br>
@@ -91,22 +91,22 @@ API DOKUMENTASI
 
 ### endpoint api anggota
 
-URL_GET : 
+URL_GET :
 ~~~
 <url>/buku_pengunjung/api/anggota
 ~~~
 
-URL_POST : 
+URL_POST :
 ~~~
 <url>/buku_pengunjung/api/anggotas
 ~~~
 
-URL_PUT : 
+URL_PUT :
 ~~~
 <url>/buku_pengunjung/api/anggota/update?id=anggota_id
 ~~~
 
-URL_DELETE : 
+URL_DELETE :
 ~~~
 <url>/buku_pengunjung/api/anggota/delete?id=anggota_id
 ~~~
@@ -143,12 +143,12 @@ nama varchar(45)
 
 ### endpoint api kehadiran
 
-URL_GET : 
+URL_GET :
 ~~~
 <url>/buku_pengunjung/api/kehadiran
 ~~~
 
-URL_POST : 
+URL_POST :
 ~~~
 <url>/buku_pengunjung/api/kehadirans
 ~~~
