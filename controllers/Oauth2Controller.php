@@ -35,11 +35,13 @@ class Oauth2Controller extends Controller {
   }
 
   public function actionCallback() {
-    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    $security = \Yii::$app->security;
-    $this->data = User::find()->where(['client_id' => $this->client_id])->one();
-    $this->data->access_token = $security->generateRandomString(50);
-    return $this->data->save() ? $this->data : null;
+    // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    // $security = \Yii::$app->security;
+    // $this->data = User::find()->where(['client_id' => $this->client_id])->one();
+    // $this->data->access_token = $security->generateRandomString(50);
+    // return $this->data->save() ? $this->data : null;
+
+    $this->redirect('https://oauth.pstmn.io/v1/browser-callback');
   }
 
   public function actionAuthorize() {
@@ -63,12 +65,13 @@ class Oauth2Controller extends Controller {
         //   'scope'         => $this->data->scope,
         //   'refresh_token' => $this->data->refresh_token,
         // ];
-        $module = Yii::$app->getModule('oauth2');
-        $response = $module->getServer()->handleAuthorizeRequest(null, null, !Yii::$app->getUser()->getIsGuest(), Yii::$app->getUser()->getId());
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return $module;
+        // print_r('asd');
+        // exit;
+        // $response = $module->getServer()->handleAuthorizeRequest(null, null, !Yii::$app->getUser()->getIsGuest(), Yii::$app->getUser()->getId());
+        // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        // return $module;
       } else {
-        return $this->render('../site/login', [
+        return $this->render('../site/oauth2', [
           'model' => $model,
         ]);
       }
@@ -91,9 +94,23 @@ class Oauth2Controller extends Controller {
   public function actionToken() {
     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     $security = \Yii::$app->security;
-    // $this->data = User::find()->where(['client_id' => $this->client_id])->one();
-    $this->token['access_token'] = $security->generateRandomString(50);
-    return $this->token ? $this->token : null;
+    $_GET = Yii::$app->request->post();
+    if (isset($_GET['refresh_token'])) {
+      $where = [
+        'refresh_token' => $_GET['refresh_token']
+      ];
+    } else {
+      $where = [
+        'client_id' => $_GET['client_id']
+      ];
+    }
+    $data = User::find()->where($where)->one();
+    $data->access_token  = $security->generateRandomString(50);
+    $data->refresh_token = $security->generateRandomString(50);
+    if ($data->expires_in < date('Y-m-d H:i:s')) {
+      $data->expires_in   = date('Y-m-d H:i:s', strtotime('+30 days', strtotime(date('Y-m-d H:i:s'))));
+    }
+    return $data->save() ? $data : NULL;
   }
 
 }

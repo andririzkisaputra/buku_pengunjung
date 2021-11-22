@@ -36,6 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
           <?= Html::tag('td', Html::encode($model['access_token'])) ?>
         </tr>
         <tr>
+          <?= Html::tag('td', Html::encode('url_token'), ['class' => 'font-weight-bold']) ?>
+          <?= Html::tag('td', Html::encode(':')) ?>
+          <?= Html::tag('td', Html::encode('http://pengunjung.test/oauth2/token')) ?>
+        </tr>
+        <tr>
           <?= Html::tag('td', Html::encode('type'), ['class' => 'font-weight-bold']) ?>
           <?= Html::tag('td', Html::encode(':')) ?>
           <?= Html::tag('td', Html::encode($model['token_type'])) ?>
