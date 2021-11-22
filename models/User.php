@@ -19,11 +19,11 @@ class User extends ActiveRecord implements IdentityInterface {
     return '{{%user}}';
   }
 
-  public function behaviors() {
-    return [
-      TimestampBehavior::class,
-    ];
-  }
+  // public function behaviors() {
+  //   return [
+  //     TimestampBehavior::class,
+  //   ];
+  // }
 
   public function rules() {
     return [

@@ -46,7 +46,7 @@ class FormRegistrasi extends Model {
     $user->generateAuthKey();
     $user->client_id     = $security->generateRandomString(25);
     $user->client_secret = $security->generateRandomString(35);
-    // $user->access_token  = $security->generateRandomString(50);
+    $user->created_at    = date('Y-m-d H:s:i');
     return $user->save() ? $user : null;
   }
 

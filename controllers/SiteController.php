@@ -53,36 +53,71 @@ class SiteController extends Controller
   }
 
   public function actionIndex() {
+
     if (!Yii::$app->user->isGuest) {
-      $user_id           = Yii::$app->user->identity->user_id;
-      $api               = new Api;
-      $model             = new FormKehadiran;
-      $kehadiran         = new Query;
-      $hari_ini          = date('Y-m-d');
-      $bulan_ini         = date('Y-m');
-      $tahun_ini         = date('Y');
-      $kunjungan_total   = $kehadiran->from('kehadiran')->groupBy('anggota_id')->andWhere(['=', 'created_by', $user_id])->count();
-      $kunjungan_harian  = $kehadiran->from('kehadiran')->where(['like', 'created_at', $hari_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('anggota_id')->count();
-      $kunjungan_bulanan = $kehadiran->from('kehadiran')->where(['like', 'created_at', $bulan_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('anggota_id')->count();
-      $kunjungan_tahunan = $kehadiran->from('kehadiran')->where(['like', 'created_at', $tahun_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('anggota_id')->count();
-      $kehadiran         = $api->select_join('kehadiran.*, anggota.nama', 'kehadiran', 'anggota', 'anggota.anggota_id = kehadiran.anggota_id', ['like', 'kehadiran.created_at', $hari_ini], ['=', 'kehadiran.created_by', $user_id], ['kehadiran.anggota_id']);
-      if ($model->load(Yii::$app->request->post())) {
-        if ($model->simpan_kehadiran()) {
-          Yii::$app->session->setFlash('success', 'Data berhasil ditambahkan.');
-          return $this->goHome();
-        } else {
-          Yii::$app->session->setFlash('error', 'Tidak terdaftar anggota.');
+      if (Yii::$app->user->identity->role == '2') {
+        $user_id           = Yii::$app->user->identity->user_id;
+        $api               = new Api;
+        $model             = new FormKehadiran;
+        $kehadiran         = new Query;
+        $hari_ini          = date('Y-m-d');
+        $bulan_ini         = date('Y-m');
+        $tahun_ini         = date('Y');
+        $kunjungan_total   = $kehadiran->from('kehadiran')->groupBy('anggota_id')->andWhere(['=', 'created_by', $user_id])->count();
+        $kunjungan_harian  = $kehadiran->from('kehadiran')->where(['like', 'created_at', $hari_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('anggota_id')->count();
+        $kunjungan_bulanan = $kehadiran->from('kehadiran')->where(['like', 'created_at', $bulan_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('anggota_id')->count();
+        $kunjungan_tahunan = $kehadiran->from('kehadiran')->where(['like', 'created_at', $tahun_ini])->andWhere(['=', 'created_by', $user_id])->groupBy('anggota_id')->count();
+        $kehadiran         = $api->select_join('kehadiran.*, anggota.nama', 'kehadiran', 'anggota', 'anggota.anggota_id = kehadiran.anggota_id', ['like', 'kehadiran.created_at', $hari_ini], ['=', 'kehadiran.created_by', $user_id], ['kehadiran.anggota_id']);
+        if ($model->load(Yii::$app->request->post())) {
+          if ($model->simpan_kehadiran()) {
+            Yii::$app->session->setFlash('success', 'Data berhasil ditambahkan.');
+            return $this->goHome();
+          } else {
+            Yii::$app->session->setFlash('error', 'Tidak terdaftar anggota.');
+          }
         }
+        return $this->render('index', [
+          'kehadiran'         => $kehadiran['data'],
+          'pages'             => $kehadiran['pages'],
+          'model'             => $model,
+          'kunjungan_total'   => $kunjungan_total,
+          'kunjungan_harian'  => $kunjungan_harian,
+          'kunjungan_bulanan' => $kunjungan_bulanan,
+          'kunjungan_tahunan' => $kunjungan_tahunan,
+        ]);
+      } else {
+        $this->layout = 'mainMaster';
+
+          $user_id           = Yii::$app->user->identity->user_id;
+          $api               = new Api;
+          $model             = new FormKehadiran;
+          $user              = new Query;
+          $hari_ini          = date('Y-m-d');
+          $bulan_ini         = date('Y-m');
+          $tahun_ini         = date('Y');
+          $user_total        = $user->from('user')->where(['=', 'role', '2'])->count();
+          $user_harian       = $user->from('user')->where(['like', 'created_at', $hari_ini])->andWhere(['=', 'role', '2'])->count();
+          $user_bulanan      = $user->from('user')->where(['like', 'created_at', $bulan_ini])->andWhere(['=', 'role', '2'])->count();
+          $user_tahunan      = $user->from('user')->where(['like', 'created_at', $tahun_ini])->andWhere(['=', 'role', '2'])->count();
+          $user              = $api->select_tabel('*', 'user', ['=', 'role', '2']);
+          if ($model->load(Yii::$app->request->post())) {
+            if ($model->simpan_kehadiran()) {
+              Yii::$app->session->setFlash('success', 'Data berhasil hapus.');
+              return $this->goHome();
+            } else {
+              Yii::$app->session->setFlash('error', 'Gagal dihapus.');
+            }
+          }
+          return $this->render('masterUser', [
+            'user'         => $user['data'],
+            'pages'        => $user['pages'],
+            'model'        => $model,
+            'user_total'   => $user_total,
+            'user_harian'  => $user_harian,
+            'user_bulanan' => $user_bulanan,
+            'user_tahunan' => $user_tahunan,
+          ]);
       }
-      return $this->render('index', [
-        'kehadiran'         => $kehadiran['data'],
-        'pages'             => $kehadiran['pages'],
-        'model'             => $model,
-        'kunjungan_total'   => $kunjungan_total,
-        'kunjungan_harian'  => $kunjungan_harian,
-        'kunjungan_bulanan' => $kunjungan_bulanan,
-        'kunjungan_tahunan' => $kunjungan_tahunan,
-      ]);
     } else {
         $this->redirect('@web/site/login');
     }
@@ -205,6 +240,18 @@ class SiteController extends Controller
       $anggota->delete();
       Yii::$app->session->setFlash('success', 'Data berhasil dihapus.');
       $this->redirect('@web/site/master-data');
+    } else {
+      Yii::$app->session->setFlash('Gagal', 'Data gagal dihapus.');
+      return array('status'=>false,'data'=> 'No Student Found');
+    }
+  }
+
+  public function actionHapusUser($id) {
+    $user = User::find()->where(['user_id' => $id])->one();
+    if($user) {
+      $user->delete();
+      Yii::$app->session->setFlash('success', 'Data berhasil dihapus.');
+      return $this->goBack();
     } else {
       Yii::$app->session->setFlash('Gagal', 'Data gagal dihapus.');
       return array('status'=>false,'data'=> 'No Student Found');
