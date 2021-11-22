@@ -158,7 +158,7 @@ class Api extends Model {
   }
 
   public function simpan_anggota($model, $post) {
-    $model->gambar = UploadedFile::getInstance($model, 'gambar');
+    // $model->gambar = UploadedFile::getInstance($model, 'gambar');
     $nomor_anggota = rand(10000, 99999);
     // $nama_format   = strtolower($post['nama'].' '.$nomor_anggota.' '.date('Y-m-d'));
     // if ($model->gambar) {
@@ -203,9 +203,11 @@ class Api extends Model {
     $cek_data = $semua->from('anggota')->where(['=', 'anggota_id', $anggota_id])->andWhere(['=', 'created_by', $user_id])->one();
     if ($cek_data) {
       if (isset($data['gambar'])) {
-        $baseUrl = Yii::$app->getBasePath();
-        @unlink($baseUrl.'/uploads/'.$cek_data['gambar']);
-        @unlink($baseUrl.'/uploads/thumb_'.$cek_data['gambar']);
+        // print_r($cek_data);
+        // exit;
+        // $baseUrl = Yii::$app->getBasePath();
+        // @unlink($baseUrl.'/uploads/'.$cek_data['gambar']);
+        // @unlink($baseUrl.'/uploads/thumb_'.$cek_data['gambar']);
         $update = Anggota::findOne([
           'anggota_id' => $anggota_id,
         ]);

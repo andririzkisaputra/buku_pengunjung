@@ -154,25 +154,32 @@ class SiteController extends Controller
     $model = new Anggota;
     $data  = Anggota::find()->where(['anggota_id' => $id])->one();
 
+    $mobile = $this->isMobile();
     if ($model->load(Yii::$app->request->post())) {
-      $baseUrl = Yii::$app->getBasePath();
-      $model->gambar = UploadedFile::getInstance($model, 'gambar');
-      $gambar = $data->gambar;
-      if ($model->gambar) {
-        @unlink($baseUrl.'/uploads/'.$data->gambar);
-        @unlink($baseUrl.'/uploads/thumb_'.$data->gambar);
-        $nama_format = strtolower($model->nama.' '.$data->nomor_anggota.' '.date('Y-m-d'));
-        $nama_format = str_replace(" ", "-", $nama_format).'.'.$model->gambar->extension;
-        $model->gambar->saveAs('uploads/'.$nama_format);
-        $imagine = Image::getImagine();
-        $image = $imagine->open('uploads/'.$nama_format);
-        $image->resize(new Box(300, 400))->save('uploads/thumb_'.$nama_format, ['quality' => 70]);
-        $gambar = $nama_format;
-      }
-      $data->attributes  = \yii::$app->request->post('Anggota');
-      $data->gambar      = $gambar;
-      $data->updated_at  = date('Y-m-d h:i:s');
-      if ($data->save()) {
+      $post = Yii::$app->request->post('Anggota');
+      // $baseUrl = Yii::$app->getBasePath();
+      // $model->gambar = UploadedFile::getInstance($model, 'gambar');
+      // $gambar = $data->gambar;
+      // if ($model->gambar) {
+      //   @unlink($baseUrl.'/uploads/'.$data->gambar);
+      //   @unlink($baseUrl.'/uploads/thumb_'.$data->gambar);
+      //   $nama_format = strtolower($model->nama.' '.$data->nomor_anggota.' '.date('Y-m-d'));
+      //   $nama_format = str_replace(" ", "-", $nama_format).'.'.$model->gambar->extension;
+      //   $model->gambar->saveAs('uploads/'.$nama_format);
+      //   $imagine = Image::getImagine();
+      //   $image = $imagine->open('uploads/'.$nama_format);
+      //   $image->resize(new Box(300, 400))->save('uploads/thumb_'.$nama_format, ['quality' => 70]);
+      //   $gambar = $nama_format;
+      // }
+      // $data->attributes  = \yii::$app->request->post('Anggota');
+      // $data->gambar      = $gambar;
+      // $data->updated_at  = date('Y-m-d h:i:s');
+      $nama_format = strtolower($post['nama']);
+      $nama_format = str_replace(" ", "-", $nama_format).'.jpg';
+      $post['gambar'] = $nama_format;
+      $api = new Api;
+      $data = $api->update_anggota($post['anggota_id'], $post, Yii::$app->user->identity->user_id);
+      if ($data['status'] == 'success') {
         $this->redirect('@web/site/master-data');
       }
 
@@ -181,7 +188,8 @@ class SiteController extends Controller
         'title'   => 'Edit Anggota',
         'model'   => $model,
         'data'    => $data,
-        'is_edit' => true
+        'is_edit' => true,
+        'mobile'  => $mobile
       ]);
     }
   }

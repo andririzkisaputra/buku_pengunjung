@@ -64,6 +64,7 @@ Vagrant.configure(2) do |config|
 
   # network settings
   config.vm.network 'private_network', ip: options['ip']
+  # config.vm.network 'public_network'
 
   # sync: folder 'yii2-app-advanced' (host machine) -> folder '/app' (guest machine)
   config.vm.synced_folder './', '/app', owner: 'vagrant', group: 'vagrant'

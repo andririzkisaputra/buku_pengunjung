@@ -25,8 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
           <a id="back-camera" class="btn btn-primary">Belakang</a>
           <a id="stop-camera" class="btn btn-primary">Refresh</a>
           <a id="reload-camera" class="btn btn-primary">Ulang</a>
-          <a id="click-photo" class="btn btn-primary video-options">Click Photo</a>
-          <input type="file" accept="image/*" capture="environment">
+          <a id="click-photo" class="btn btn-primary">Click Photo</a>
         </div>
         <video id="video" width="600" height="410" autoplay></video>
         <div class="form-group">
@@ -54,9 +53,25 @@ $this->params['breadcrumbs'][] = $this->title;
         ]); ?>
           <?= $form->field($model, 'anggota_id')->textInput(['value' => $data['anggota_id'], 'hidden' => true])->label(false) ?>
           <?= $form->field($model, 'nomor_anggota')->textInput(['value' => $data['nomor_anggota'], 'readonly' => true]) ?>
-          <?= $form->field($model, 'nama')->textInput(['value' => $data['nama']]) ?>
-          <?php echo Html::img('@web/uploads/thumb_'.$data['gambar'], ['class' => 'detail-img']);?>
-          <?= $form->field($model, 'gambar')->fileInput(['class' => 'btn btn-primary', 'accept' => 'image/*', 'capture' => 'camera'])->label(false) ?>
+          <?= $form->field($model, 'nama')->textInput(['value' => $data['nama'], 'id' => 'nama']) ?>
+          <?php
+          // $form->field($model, 'gambar')->fileInput(['class' => 'btn btn-primary', 'accept' => 'image/*', 'capture' => 'camera'])->label(false) ?>
+          <div class="form-group">
+            <a id="start-camera" class="btn btn-primary">Depan</a>
+            <a id="back-camera" class="btn btn-primary">Belakang</a>
+            <a id="stop-camera" class="btn btn-primary">Refresh</a>
+            <a id="reload-camera" class="btn btn-primary">Ulang</a>
+            <a id="click-photo" class="btn btn-primary">Click Photo</a>
+          </div>
+          <video id="video" width="600" height="410" autoplay></video>
+          <div class="form-group">
+            <?php if ($mobile): ?>
+              <canvas id="canvas" width="510" height="700"></canvas>
+            <?php endif; ?>
+            <?php if (!$mobile): ?>
+              <canvas id="canvas" width="600" height="410"></canvas>
+            <?php endif; ?>
+          </div>
           <div class="form-group">
               <?= Html::submitButton('Simpan', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
           </div>
