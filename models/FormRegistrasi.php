@@ -35,14 +35,18 @@ class FormRegistrasi extends Model {
     if (!$this->validate()) {
         return null;
     }
-    $security = \Yii::$app->security;
-    $user           = new User();
-    $user->nama     = $this->nama;
-    $user->username = $this->username;
-    $user->email    = $this->email;
+    $security         = \Yii::$app->security;
+    $user             = new User();
+    $user->nama       = $this->nama;
+    $user->username   = $this->username;
+    $user->email      = $this->email;
+    $user->token_type = 'Bearer';
+    $user->scope      = 'app';
     $user->setPassword($this->password);
     $user->generateAuthKey();
-    $user->access_token  = $security->generateRandomString(255);
+    $user->client_id     = $security->generateRandomString(25);
+    $user->client_secret = $security->generateRandomString(35);
+    // $user->access_token  = $security->generateRandomString(50);
     return $user->save() ? $user : null;
   }
 

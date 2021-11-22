@@ -8,7 +8,6 @@ use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-// use OAuth2\Storage\UserCredentialsInterface;
 use yii\db\Expression;
 
 class User extends ActiveRecord implements IdentityInterface {
@@ -23,18 +22,6 @@ class User extends ActiveRecord implements IdentityInterface {
   public function behaviors() {
     return [
       TimestampBehavior::class,
-      [
-        'class' => BlameableBehavior::class,
-        'updatedByAttribute' => false
-      ],
-      'timestamp' => [
-          'class' => 'yii\behaviors\TimestampBehavior',
-          'attributes' => [
-              ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-              ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
-          ],
-          'value' => new Expression('NOW()'),
-      ],
     ];
   }
 

@@ -308,8 +308,19 @@ class SiteController extends Controller
   public function actionRefreshToken() {
     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     $security = \Yii::$app->security;
-    $data = User::find()->where(['client_id' => $_GET['client_id']])->one();
-    $data->access_token = $security->generateRandomString(50);
+
+    if (isset($_GET['refresh_token'])) {
+      $where = [
+        'refresh_token' => $_GET['refresh_token']
+      ];
+    } else {
+      $where = [
+        'client_id' => $_GET['client_id']
+      ];
+    }
+    $data = User::find()->where($where)->one();
+    $data->access_token  = $security->generateRandomString(50);
+    $data->refresh_token = $security->generateRandomString(50);
     if ($data->expires_in < date('Y-m-d H:i:s')) {
       $data->expires_in   = date('Y-m-d H:i:s', strtotime('+30 days', strtotime(date('Y-m-d H:i:s'))));
     }
