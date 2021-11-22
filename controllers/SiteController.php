@@ -100,14 +100,6 @@ class SiteController extends Controller
           $user_bulanan      = $user->from('user')->where(['like', 'created_at', $bulan_ini])->andWhere(['=', 'role', '2'])->count();
           $user_tahunan      = $user->from('user')->where(['like', 'created_at', $tahun_ini])->andWhere(['=', 'role', '2'])->count();
           $user              = $api->select_tabel('*', 'user', ['=', 'role', '2']);
-          if ($model->load(Yii::$app->request->post())) {
-            if ($model->simpan_kehadiran()) {
-              Yii::$app->session->setFlash('success', 'Data berhasil hapus.');
-              return $this->goHome();
-            } else {
-              Yii::$app->session->setFlash('error', 'Gagal dihapus.');
-            }
-          }
           return $this->render('masterUser', [
             'user'         => $user['data'],
             'pages'        => $user['pages'],
@@ -249,6 +241,14 @@ class SiteController extends Controller
   public function actionHapusUser($id) {
     $user = User::find()->where(['user_id' => $id])->one();
     if($user) {
+      $anggota = Anggota::find()->where(['created_by' => $id])->one();
+      if ($anggota) {
+        $kehadiran = Kehadiran::find()->where(['created_by' => $id])->one();
+        if ($kehadiran) {
+          $kehadiran->delete();
+        }
+        $anggota->delete();
+      }
       $user->delete();
       Yii::$app->session->setFlash('success', 'Data berhasil dihapus.');
       return $this->goBack();
