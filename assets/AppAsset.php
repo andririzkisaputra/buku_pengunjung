@@ -23,7 +23,8 @@ class AppAsset extends AssetBundle
       'css/site.css',
   ];
   public $js = [
-    'js/webcam.js',
+    // 'js/webcam.js',
+    // 'js/webcam.min.js',
     'js/pagination.js',
     'js/pagination.min.js',
     'js/main.js',

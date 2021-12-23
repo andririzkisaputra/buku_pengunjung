@@ -32,7 +32,10 @@ IntermediateInheritor.prototype = Error.prototype;
 
 FlashError.prototype = new IntermediateInheritor();
 WebcamError.prototype = new IntermediateInheritor();
-
+var constraints = {
+    video: true,
+    facingMode: "environment"
+};
 var Webcam = {
 	version: '1.0.26',
 	
@@ -301,7 +304,10 @@ var Webcam = {
 						minWidth: this.params.dest_width,
 						minHeight: this.params.dest_height
 					}
+					
 				}
+				
+				
 			})
 			.then( function(stream) {
 				// got access, attach stream to video
@@ -610,7 +616,7 @@ var Webcam = {
         			if (ver) hasFlash = true;
         		}
         	}
-        	catch (e) {}
+        	catch (e) {;}
         }
         
         return hasFlash;
