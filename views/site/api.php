@@ -68,22 +68,22 @@ $this->params['breadcrumbs'][] = $this->title;
         <tr>
           <?= Html::tag('td', Html::encode('URL_GET'), ['class' => 'font-weight-bold']) ?>
           <?= Html::tag('td', Html::encode(':')) ?>
-          <?= Html::tag('td', Html::encode('http://localhost/buku_pengunjung/api/anggota')) ?>
+          <?= Html::tag('td', Html::encode('http://pengunjung.test/api/anggota')) ?>
         </tr>
         <tr>
           <?= Html::tag('td', Html::encode('URL_POST'), ['class' => 'font-weight-bold']) ?>
           <?= Html::tag('td', Html::encode(':')) ?>
-          <?= Html::tag('td', Html::encode('http://localhost/buku_pengunjung/api/anggotas')) ?>
+          <?= Html::tag('td', Html::encode('http://pengunjung.test/api/anggotas')) ?>
         </tr>
         <tr>
           <?= Html::tag('td', Html::encode('URL_PUT'), ['class' => 'font-weight-bold']) ?>
           <?= Html::tag('td', Html::encode(':')) ?>
-          <?= Html::tag('td', Html::encode('http://localhost/buku_pengunjung/api/anggota/update?id=anggota_id')) ?>
+          <?= Html::tag('td', Html::encode('http://pengunjung.test/api/anggota/update?id=anggota_id')) ?>
         </tr>
         <tr>
           <?= Html::tag('td', Html::encode('URL_DELETE'), ['class' => 'font-weight-bold']) ?>
           <?= Html::tag('td', Html::encode(':')) ?>
-          <?= Html::tag('td', Html::encode('http://localhost/buku_pengunjung/api/anggota/delete?id=anggota_id')) ?>
+          <?= Html::tag('td', Html::encode('http://pengunjung.test/api/anggota/delete?id=anggota_id')) ?>
         </tr>
       </table>
       <?= Html::tag('p', Html::encode('Method'), ['class' => 'font-weight-bold']) ?>
@@ -136,12 +136,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <tr>
           <?= Html::tag('td', Html::encode('URL_GET'), ['class' => 'font-weight-bold']) ?>
           <?= Html::tag('td', Html::encode(':')) ?>
-          <?= Html::tag('td', Html::encode('http://localhost/buku_pengunjung/api/kehadiran')) ?>
+          <?= Html::tag('td', Html::encode('http://pengunjung.test/api/kehadiran')) ?>
         </tr>
         <tr>
           <?= Html::tag('td', Html::encode('URL_POST'), ['class' => 'font-weight-bold']) ?>
           <?= Html::tag('td', Html::encode(':')) ?>
-          <?= Html::tag('td', Html::encode('http://localhost/buku_pengunjung/api/kehadirans')) ?>
+          <?= Html::tag('td', Html::encode('http://pengunjung.test/api/kehadirans')) ?>
         </tr>
       </table>
       <?= Html::tag('p', Html::encode('Method'), ['class' => 'font-weight-bold']) ?>

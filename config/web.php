@@ -21,10 +21,6 @@ $config = [
               'application/json' => 'yii\web\JsonParser',
             ]
         ],
-        // 'response' => [
-        //   'format' => yii\web\Response::FORMAT_JSON,
-        //   'charset' => 'UTF-8',
-        // ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -66,57 +62,13 @@ $config = [
           'showScriptName'      => false,
           'rules' => [
               ['class' => 'yii\rest\UrlRule', 'controller' => ['api/anggota', 'api/kehadiran']],
-              // ['class' => 'yii\rest\UrlRule', 'controller' => 'api/kehadiran']
           ],
-            // 'class'           => 'yii\web\UrlManager',
-            // 'enablePrettyUrl' => true,
-            // 'enableStrictParsing'   => true,
-            // 'showScriptName'  => false,
-            // 'rules' => [
-                // 'POST oauth2<action:\w+>' => 'api/user/login<action>',
-                // 'oauth2' => 'oauth2/login',
-                // [
-                //   'class'      => 'yii\rest\UrlRule',
-                //   'pluralize'  => false,
-                //   'controller' => [
-                //     'authorize' => 'site/login'
-                //   ]
-                // ],
-                // [
-                //   'class'      => 'yii\rest\UrlRule',
-                //   'pluralize'  => false,
-                //   'controller' => ['api/v1/anggota' => 'api/v1/anggota'],
-                // ],
-                // [
-                //   'class'      => 'yii\rest\UrlRule',
-                //   'pluralize'  => false,
-                //   'controller' => ['api/v1/kehadiran' => 'api/v1/kehadiran'],
-                // ]
-            // ],
         ],
     ],
     'modules' => [
       'api' => [
-        // 'basePath' => '@app/modules/v1',
         'class' => '\app\modules\api\Module'
       ],
-      // 'oauth2' => [
-      //   'class' => 'filsh\yii2\oauth2server\Module',
-      //   'tokenParamName' => 'accessToken',
-      //   'tokenAccessLifetime' => 3600 * 24,
-      //   'storageMap' => [
-      //       'user_credentials' => 'app\models\User',
-      //   ],
-      //   'grantTypes' => [
-      //       'user_credentials' => [
-      //           'class' => 'OAuth2\GrantType\UserCredentials',
-      //       ],
-      //       'refresh_token' => [
-      //           'class' => 'OAuth2\GrantType\RefreshToken',
-      //           'always_issue_new_refresh_token' => true
-      //       ]
-      //   ]
-      // ]
     ],
     'params' => $params,
     'timeZone' => 'Asia/Jakarta',
